@@ -1,0 +1,4 @@
+(lang dune 2.7)
+
+(package
+ (name eio-solo5))
