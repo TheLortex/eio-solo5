@@ -1,0 +1,6 @@
+[submodule "networking-experiments"]
+	path = networking-experiments
+	url = https://github.com/TheLortex/networking-experiments
+[submodule "dream"]
+	path = dream
+	url = https://github.com/TheLortex/dream
