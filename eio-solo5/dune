@@ -1,7 +1,7 @@
 (library
  (name eio_solo5)
  (public_name eio-solo5)
- (libraries eio eio.utils)
+ (libraries eio eio.utils mtime macaddr)
  (foreign_stubs
   (language c)
   (names stubs netif)))

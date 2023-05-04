@@ -16,21 +16,23 @@ external solo5_net_read :
 external solo5_net_write : int64 -> Cstruct.buffer -> int -> int -> solo5_result
   = "mirage_solo5_net_write_3"
 
-let flow devname handle _: Eio.Flow.two_way =
+
+type 'a ok = #Eio.Flow.source as 'a
+
+let flow devname handle ni =
+  let mac = Macaddr.of_octets ni.solo5_mac |> Result.get_ok in
+  let mtu = ni.solo5_mtu in
+  Eio.traceln "OK: Mac is %s" (Macaddr.to_string mac);
+  Eio.traceln "OK: Mtu is %d" mtu;
   object(self)
 
-    inherit Eio.Flow.two_way
-
-    method shutdown _ = ()
-
-    method read_into (buffer: Cstruct.t) =
-      assert (buffer.off = 0);
+    method recv (buffer: Cstruct.t) =
       match solo5_net_read handle buffer.buffer buffer.off buffer.len with
       | SOLO5_R_OK, len -> len
       | SOLO5_R_AGAIN, _ ->
 
         Sched.wait_for_work_on_handle handle;
-        self#read_into buffer
+        self#recv buffer
 
 
       | SOLO5_R_EINVAL, _ ->
@@ -38,6 +40,10 @@ let flow devname handle _: Eio.Flow.two_way =
       | SOLO5_R_EUNSPEC, _ ->
           failwith (Fmt.str "Netif: connect(%s): Unspecified error" devname)
 
-    method copy _source = failwith "e"
 
+    method send (src : Cstruct.t) =
+      solo5_net_write handle src.buffer src.off src.len |> ignore;
+
+    method mac = mac
+    method mtu = mtu
   end

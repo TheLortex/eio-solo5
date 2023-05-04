@@ -39,16 +39,19 @@ let rec schedule t : exit =
     | (`Wait_until _ | `Nothing as e) ->
         let time =
           match e with
-          | `Nothing when Hashtbl.length t.io_q = 0 -> None
+          | `Nothing when
+              Hashtbl.length t.io_q = 0 && Lf_queue.is_empty t.run_q -> None
           | `Nothing -> Some (86_400_000_000_000L) (* 1 day *)
           | `Wait_until time -> Some (Mtime.to_uint64_ns time)
         in
         match time with
         | None -> `Exit_scheduler
         | Some time ->
-          let now = Mtime.to_uint64_ns now in
-          let diff_ns = Int64.sub time now in
-          let ready_set = Time.solo5_yield diff_ns in
+          (* let now = Mtime.to_uint64_ns now in *)
+          (* let diff_ns = Int64.sub time now in *)
+          (* Eio.traceln "yield %Ld %d" diff_ns (Hashtbl.length t.io_q); *)
+          let ready_set = Time.solo5_yield time in
+          (* Eio.traceln "yield > %Ld" ready_set; *)
           if Int64.equal ready_set 0L then
             schedule t
           else

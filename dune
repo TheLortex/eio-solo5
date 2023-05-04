@@ -14,7 +14,7 @@
   always
   -cclib
   (:include solo5_abi_flag))
- (libraries eio eio-solo5)
+ (libraries eio eio-solo5 ethernet tcpip.tcp tcpip.udp tcpip.ipv4 arp.mirage tcpip.icmpv4 logs.fmt dream-mirage)
  (foreign_stubs
   (language c)
   (names startup manifest)))
