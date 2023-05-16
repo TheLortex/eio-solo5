@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout tree
         uses: actions/checkout@v3
+        with:
+          submodules: recursive
 
       - name: Set-up OCaml 5.0
         uses: ocaml/setup-ocaml@v2
