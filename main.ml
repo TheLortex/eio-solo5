@@ -54,14 +54,14 @@ let stack ~net ~mono ~random ~clock ~cidr fn =
       method getaddrinfo ~service:_ _ = failwith "TODO"
       method getnameinfo _ = failwith "TODO"
 
-      method listen ~reuse_addr:_ ~reuse_port:_ ~backlog:_ ~sw stream =
+      method listen ~reuse_addr:_ ~reuse_port:_ ~backlog:_ ~sw:_ stream =
         match stream with
-        | `Tcp (ip, port) ->
+        | `Tcp (_ip, port) ->
             let waiters_cond = Eio.Condition.create () in
             let waiters = Queue.create () in
             let listening_socket =
               object
-                method accept ~sw =
+                method accept ~sw:_ =
                   let promise, resolver = Eio.Promise.create () in
                   Queue.add resolver waiters;
                   Eio.Condition.broadcast waiters_cond;
@@ -95,7 +95,7 @@ let stack ~net ~mono ~random ~clock ~cidr fn =
     object
       method net = net
       method clock = clock
-      method mono = mono
+      method mono_clock = mono
       method secure_random = random
     end
   in
