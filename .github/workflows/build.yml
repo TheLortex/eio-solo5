@@ -1,0 +1,40 @@
+name: Build
+
+on:
+  pull_request:
+  push:
+
+permissions: read-all
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout tree
+        uses: actions/checkout@v3
+
+      - name: Set-up OCaml 5.0
+        uses: ocaml/setup-ocaml@v2
+        with:
+          ocaml-compiler: 5.0
+          dune-cache: true
+
+      - name: Switch dependencies
+        run: |
+          opam pin https://github.com/mirage/ocaml-solo5.git#500-cleaned -ny
+          opam install solo5.0.8.0 ocaml-solo5 opam-monorepo dune
+
+      - name: Prepare
+        run: |
+          rm -rf networking-experiments/vendor/httpaf/
+          rm -rf networking-experiments/vendor/luv/test/
+          sed '/pin-depends:/,/^]/d' -i  dream/src/vendor/httpaf/*.opam
+          sed '/pin-depends:/,/^]/d' -i  dream/src/vendor/websocketaf/*.opam
+
+      - name: Monorepo dependencies
+        run: |
+          opam monorepo lock
+          opam monorepo pull
+
+      - name: Build
+        run: opam exec -- dune runtest
