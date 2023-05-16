@@ -21,6 +21,7 @@ jobs:
 
       - name: Switch dependencies
         run: |
+          sudo apt install libseccomp
           opam pin https://github.com/mirage/ocaml-solo5.git#500-cleaned -ny
           opam install solo5.0.8.0 ocaml-solo5 opam-monorepo dune
 
