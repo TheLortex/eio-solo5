@@ -36,6 +36,7 @@ jobs:
 
       - name: Monorepo dependencies
         run: |
+          opam repository add dune-universe git+https://github.com/dune-universe/opam-overlays.git
           opam monorepo lock
           opam monorepo pull
 
