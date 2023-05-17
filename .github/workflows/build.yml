@@ -41,4 +41,10 @@ jobs:
           opam monorepo pull
 
       - name: Build
-        run: opam exec -- dune runtest
+        run: opam exec -- dune build _build/solo5/main.exe
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: image-hvt
+          path: _build/solo5/main.exe
