@@ -11,5 +11,5 @@ pin-depends: [
   [ "multipart_form-lwt.dev" "git+https://github.com/dinosaure/multipart_form#a794239b8fc9601540ffea489b2c470227216c5e"]
   [ "multipart_form-eio.dev" "git+https://github.com/dinosaure/multipart_form#a794239b8fc9601540ffea489b2c470227216c5e"]
   [ "zarith.dev" "https://github.com/mirage/Zarith/releases/download/release-1.12+dune1/zarith-release-1.12+dune1.tbz"]
-  [ "mirage-crypto-rng-eio.dev" "git+https://github.com/TheLortex/mirage-crypto.git#portable-eio"]
+  [ "mirage-crypto.dev" "git+https://github.com/TheLortex/mirage-crypto.git#portable-eio"]
 ]
